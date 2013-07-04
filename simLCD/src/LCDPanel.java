@@ -11,8 +11,12 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class LCDPanel extends JPanel {
+import Interfaces.ScreenChangeListener;
+
+public class LCDPanel extends JPanel implements ScreenChangeListener{
 
 	/**
 	 * 
@@ -29,8 +33,11 @@ public class LCDPanel extends JPanel {
 	Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
 			cursorImg, new Point(0, 0), "blank cursor");
 
-	public LCDPanel(Color initialColor) {
+	public LCDPanel(LCDModel lcd, Color initialColor) {
 		super();
+		this.model = lcd;
+		this.model.addScreenChangeListener(this);
+		
 		this.backgroundColor = initialColor;
 		setBorder(new LineBorder(new Color(0, 0, 0)));
 		this.image = new BufferedImage(Consts.WIDTH, Consts.HEIGHT,
@@ -104,6 +111,14 @@ public class LCDPanel extends JPanel {
 
 		repaint();
 	}
+
+	@Override
+	public void notifyScreenChanged() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 	
 
 }
