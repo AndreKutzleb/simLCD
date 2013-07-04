@@ -17,6 +17,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JToggleButton;
 
 
 public class NewGUI {
@@ -91,32 +92,37 @@ public class NewGUI {
 		JButton btnAdvanced = new JButton("Open Framebuffer");
 		toolBar.add(btnAdvanced);
 		
-		JSeparator separator = new JSeparator();
-		toolBar.add(separator);
+		toolBar.addSeparator();
 		
 		JButton btnResetEverything = new JButton("Reset");
 		toolBar.add(btnResetEverything);
+
+		toolBar.addSeparator();
 		
-		JSeparator separator_1 = new JSeparator();
-		toolBar.add(separator_1);
-		
-		JButton btnToggleBacklight = new JButton("Toggle Backlight");
-		toolBar.add(btnToggleBacklight);
-		
-		JSeparator separator_2 = new JSeparator();
-		toolBar.add(separator_2);
-		
+		JToggleButton tglbtnBacklight = new JToggleButton("Backlight");
+		toolBar.add(tglbtnBacklight);
+
+		toolBar.addSeparator();
+
 		JLabel lblContrast = new JLabel("Contrast:");
 		toolBar.add(lblContrast);
-		
+
+		toolBar.addSeparator();
+
 		JSlider slider = new JSlider();
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
-		labelTable.put( new Integer( 0 ), new JLabel("Stop") );
-		labelTable.put( new Integer( 60/10 ), new JLabel("Slow") );
-		labelTable.put( new Integer( 60 ), new JLabel("Fast") );
-		
+		slider.setMinorTickSpacing(1);
+		slider.setMajorTickSpacing(8);
+		labelTable.put( new Integer( 0 ), new JLabel("0") );
+		labelTable.put( new Integer( 15), new JLabel("15") );
+		labelTable.put( new Integer( 31 ), new JLabel("31") );
+		labelTable.put( new Integer( 47 ), new JLabel("47") );
+		labelTable.put( new Integer( 63 ), new JLabel("63") );
 		slider.setLabelTable(labelTable);
+
+		slider.setMinimum(0);
 		slider.setMaximum(63);
+		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 		toolBar.add(slider);
 	}

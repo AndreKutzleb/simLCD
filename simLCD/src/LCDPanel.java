@@ -21,6 +21,8 @@ public class LCDPanel extends JPanel {
 
 	private BufferedImage image;
 	private Point drawCursorAt = null;
+	private Color backgroundColor;
+	private LCDModel model;
 
 	BufferedImage cursorImg = new BufferedImage(16, 16,
 			BufferedImage.TYPE_INT_ARGB);
@@ -29,6 +31,7 @@ public class LCDPanel extends JPanel {
 
 	public LCDPanel(Color initialColor) {
 		super();
+		this.backgroundColor = initialColor;
 		setBorder(new LineBorder(new Color(0, 0, 0)));
 		this.image = new BufferedImage(Consts.WIDTH, Consts.HEIGHT,
 				ColorSpace.TYPE_RGB);
@@ -101,5 +104,6 @@ public class LCDPanel extends JPanel {
 
 		repaint();
 	}
+	
 
 }
