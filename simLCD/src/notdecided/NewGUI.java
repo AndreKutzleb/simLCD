@@ -2,29 +2,28 @@ package notdecided;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.util.Hashtable;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JToggleButton;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 
 import LCD.FrameBufferModule;
 import LCD.LCDModel;
 import LCD.ScreenModule;
-
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.BoxLayout;
-import javax.swing.SwingConstants;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 
 public class NewGUI {
@@ -73,8 +72,19 @@ public class NewGUI {
 		ScreenModule screenModule = new ScreenModule(model, Consts.backgroundColor, Color.black, 4);
 		panel.add(screenModule);
 		
-//		FrameBufferModule frameBufferModule = new FrameBufferModule(model, Color.gray, Color.red, 4);
-//		panel.add(frameBufferModule);
+		final FrameBufferModule frameBufferModule = new FrameBufferModule(model, Color.gray, Color.red, 4);
+		panel.add(frameBufferModule);
+		
+		final JToolBar toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		toolBar.setOrientation(SwingConstants.VERTICAL);
+		WrappingFlowLayout layout = new WrappingFlowLayout();
+		toolBar.setLayout(layout);
+		frame.getContentPane().add(toolBar, BorderLayout.EAST);
+		
+		
+		frameBufferModule.setVisible(false);
+		toolBar.setVisible(false);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -91,10 +101,80 @@ public class NewGUI {
 		JMenu mnView = new JMenu("View");
 		menuBar.add(mnView);
 		
+		final JCheckBoxMenuItem chckbxmntmFramebuffer = new JCheckBoxMenuItem("Framebuffer");
+		chckbxmntmFramebuffer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					frameBufferModule.setVisible(chckbxmntmFramebuffer.isSelected());
+					NewGUI.this.frame.pack();
+				
+			}
+		});
+		
+		mnView.add(chckbxmntmFramebuffer);
+		
+		final JCheckBoxMenuItem chckbxmntmCommands = new JCheckBoxMenuItem("Commands");
+		mnView.add(chckbxmntmCommands);
+		chckbxmntmCommands.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				toolBar.setVisible(chckbxmntmCommands.isSelected());
+				NewGUI.this.frame.pack();
+				
+			}
+		});
+		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
 		
+
+		JButton putPixel = new JButton("putPixel");
+		toolBar.add(putPixel);
+		
+		putPixel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new CommandOption(NewGUI.this.frame, "putPixel", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, new String[] {"x", "y", "color"}) {
+
+					@Override
+					public void executeCommand() {
+						int x = Integer.parseInt(inputFields[0]);
+						int y = Integer.parseInt(inputFields[1]);
+						int color = Integer.parseInt(inputFields[2]);
+						model.putPixel(x, y, color);
+					}
+					
+				};
+			}
+		});
+		
+		toolBar.addSeparator();
+		
+		JButton writeFrameBuffer = new JButton("writeFramebuffer");
+		toolBar.add(writeFrameBuffer);
+		
+		writeFrameBuffer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.writeFramebuffer();
+			}
+		});
+		
+		
+		JButton drawTests = new JButton("drawTests");
+		drawTests.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.drawLine(new Random().nextInt(128),new Random().nextInt(64), new Random().nextInt(128),new Random().nextInt(64));
+			}
+		});
+		toolBar.add(drawTests);
 	}
+	
 	
 }

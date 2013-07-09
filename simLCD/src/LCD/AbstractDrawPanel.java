@@ -113,7 +113,7 @@ public abstract class AbstractDrawPanel extends JPanel implements MouseMotionLis
 				drawCursorAt = new Point(pixelPosX, pixelPosY);
 				setCursor(blankCursor);
 				
-				Point pointOnLCD = new Point(pixelPosX/8,pixelPosY/8);
+				Point pointOnLCD = new Point(pixelPosX/this.sizeFactor,pixelPosY/this.sizeFactor);
 				if (model.getBoundaries().contains(pointOnLCD)) {
 					fireScreenMetadataEvent(new ScreenMetadata(pointOnLCD));					
 				}

@@ -23,7 +23,10 @@ public class FrameBufferPanel extends AbstractDrawPanel implements FramebufferCh
 	public FrameBufferPanel(LCDModel lcd, Color initialColor, Color penColor,
 			int sizeFactor) {
 		super(lcd, initialColor, penColor, sizeFactor);
+		
+		this.backgroundColor = initialColor;
 		this.clear(this.backgroundColor);
+		
 		this.model.addFramebufferChangeListener(this);
 	}
 
