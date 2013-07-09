@@ -1,3 +1,5 @@
+package LCD;
+
 import java.awt.Rectangle;
 import java.util.List;
 import java.util.Observable;
@@ -5,7 +7,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import notdecided.Consts;
+import notdecided.Fonts;
+import notdecided.Consts.FillColor;
+import notdecided.Consts.PenColor;
+import notdecided.Fonts.type;
+
 import Interfaces.FramebufferChangeListener;
+import Interfaces.LCD;
 import Interfaces.ScreenChangeListener;
 
 /**
@@ -15,7 +24,7 @@ import Interfaces.ScreenChangeListener;
  * @version 1.0
  *
  */
-public class LCDModel extends Observable implements LCD {
+public class LCDModel implements LCD {
 
 	private final Logger logger;
 	private final int width;
@@ -24,6 +33,10 @@ public class LCDModel extends Observable implements LCD {
 	private final boolean[][] screen;
 	private final Rectangle boundaries;
 	
+	public Rectangle getBoundaries() {
+		return boundaries;
+	}
+
 	private boolean backLight;
 	private int contrast;
 	private Fonts.type font;
@@ -172,7 +185,8 @@ public class LCDModel extends Observable implements LCD {
 		case 3:  this.font = Fonts.type.TERMINAL_12x16; break;
 		default: this.font = Fonts.type.TERMINAL_6x8;   break;
 		}
-		
+		fireFramebufferChangeEvent();
+
 	}
 
 	@Override
@@ -225,6 +239,8 @@ public class LCDModel extends Observable implements LCD {
 				logger.log(Level.WARNING, "set penColor to a value other than 0..1. Command Ignored.");
 				return;
 			}	
+			fireFramebufferChangeEvent();
+
 	}
 
 	@Override
@@ -244,6 +260,8 @@ public class LCDModel extends Observable implements LCD {
 			return;
 		}
 		
+		fireFramebufferChangeEvent();
+
 	}
 
 	@Override
@@ -487,7 +505,7 @@ public class LCDModel extends Observable implements LCD {
 	
 	private void fireScreenChangeEvent() {
 		for (ScreenChangeListener listener : this.screenChangeListener) {
-			listener.notifyScreenChanged();
+			listener.screenChanged();
 		}
 	}
 }

@@ -1,3 +1,4 @@
+package notdecided;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -6,7 +7,7 @@ import java.awt.image.WritableRaster;
 
 public class Consts {
 	
-	enum FillColor {
+	public enum FillColor {
 		transparent(-1), 
 		white(0),
 		black(1);
@@ -22,7 +23,7 @@ public class Consts {
 			}	
 	}
 	
-	enum PenColor {
+	public enum PenColor {
 		white(0), 
 		black(1);
 		

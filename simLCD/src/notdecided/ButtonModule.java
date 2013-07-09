@@ -1,3 +1,4 @@
+package notdecided;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 

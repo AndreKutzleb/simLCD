@@ -1,7 +1,9 @@
 package Interfaces;
 
+
+
 public interface ScreenChangeListener {
 	
-	public abstract void notifyScreenChanged();
+	public abstract void screenChanged();
 
 }
