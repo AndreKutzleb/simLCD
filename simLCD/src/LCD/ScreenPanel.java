@@ -1,7 +1,8 @@
 package LCD;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
+import java.awt.Graphics2D;
 
 import notdecided.Consts;
 import Interfaces.ScreenChangeListener;
@@ -41,17 +42,34 @@ public class ScreenPanel extends AbstractDrawPanel implements ScreenChangeListen
 
 	protected void redrawFromModel() {
 		boolean[][] screenData = this.model.getScreen();
-		Graphics g = image.getGraphics();
+		Graphics2D g = (Graphics2D)image.getGraphics();
 		int pixelSize = this.sizeFactor;
+		
+		float alphaStrength = 0.00634f * this.model.getContrast();
+		float baseContrast = 0.4f;
+		float alpha = (alphaStrength + baseContrast);
+		// TODO dynamic contrast values, dynamic alpha stepping
+		if (alpha > .999f) {
+			alpha = .999f;
+		}
 
+		// draw Background
+		for (int x = 0; x < screenData.length; x++) {
+			for (int y = 0; y < screenData[0].length; y++) {
+				g.setColor(this.backgroundColor);
+				g.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+			}
+		}
+		
+			g.setColor(this.penColor);
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
+		// draw pixels
 		for (int x = 0; x < screenData.length; x++) {
 			for (int y = 0; y < screenData[0].length; y++) {
 				if (screenData[x][y]) {
-					g.setColor(this.penColor);
-				} else {
-					g.setColor(this.backgroundColor);
+					g.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 				}
-				g.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 			}
 		}
 	}

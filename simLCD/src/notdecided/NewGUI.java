@@ -22,8 +22,12 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import LCD.FrameBufferModule;
+import LCD.JAccordion;
 import LCD.LCDModel;
 import LCD.ScreenModule;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.JScrollPane;
 
 
 public class NewGUI {
@@ -62,29 +66,51 @@ public class NewGUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1314, 683);
+		frame.setBounds(100, 100, 802, 678);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Screen", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panel.add(panel_2);
+		
 		ScreenModule screenModule = new ScreenModule(model, Consts.backgroundColor, Color.black, 4);
-		panel.add(screenModule);
+		panel_2.add(screenModule);
 		
-		final FrameBufferModule frameBufferModule = new FrameBufferModule(model, Color.gray, Color.red, 4);
-		panel.add(frameBufferModule);
+		final JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Framebuffer", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panel.add(panel_3);
 		
-		final JToolBar toolBar = new JToolBar();
-		toolBar.setFloatable(false);
-		toolBar.setOrientation(SwingConstants.VERTICAL);
-		WrappingFlowLayout layout = new WrappingFlowLayout();
-		toolBar.setLayout(layout);
-		frame.getContentPane().add(toolBar, BorderLayout.EAST);
+		final FrameBufferModule frameBufferModule = new FrameBufferModule(model, Color.gray, Color.black, 4);
+		panel_3.add(frameBufferModule);
 		
 		
-		frameBufferModule.setVisible(false);
-		toolBar.setVisible(false);
+		panel_3.setVisible(false);
+		
+		
+		JPanel drawing = new JPanel();
+		drawing.setLayout(new WrappingFlowLayout());
+		
+		
+		JPanel text = new JPanel();
+		text.setLayout(new WrappingFlowLayout());
+		
+		JPanel info = new JPanel();
+		info.setLayout(new WrappingFlowLayout());
+		
+		final JPanel commandBorder = new JPanel();
+		commandBorder.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Commands", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+
+		
+		frame.getContentPane().add(commandBorder, BorderLayout.EAST);
+		
+		commandBorder.setVisible(false);
+		
+		JScrollPane scrollPane = new CommandPane(model);
+		commandBorder.add(scrollPane);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -106,7 +132,7 @@ public class NewGUI {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					frameBufferModule.setVisible(chckbxmntmFramebuffer.isSelected());
+					panel_3.setVisible(chckbxmntmFramebuffer.isSelected());
 					NewGUI.this.frame.pack();
 				
 			}
@@ -115,65 +141,22 @@ public class NewGUI {
 		mnView.add(chckbxmntmFramebuffer);
 		
 		final JCheckBoxMenuItem chckbxmntmCommands = new JCheckBoxMenuItem("Commands");
-		mnView.add(chckbxmntmCommands);
+		
 		chckbxmntmCommands.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				toolBar.setVisible(chckbxmntmCommands.isSelected());
+			public void actionPerformed(ActionEvent arg0) {
+				commandBorder.setVisible(chckbxmntmCommands.isSelected());
 				NewGUI.this.frame.pack();
 				
 			}
 		});
 		
+		mnView.add(chckbxmntmCommands);
+		
+		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
-		
-		
-
-		JButton putPixel = new JButton("putPixel");
-		toolBar.add(putPixel);
-		
-		putPixel.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new CommandOption(NewGUI.this.frame, "putPixel", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, new String[] {"x", "y", "color"}) {
-
-					@Override
-					public void executeCommand() {
-						int x = Integer.parseInt(inputFields[0]);
-						int y = Integer.parseInt(inputFields[1]);
-						int color = Integer.parseInt(inputFields[2]);
-						model.putPixel(x, y, color);
-					}
-					
-				};
-			}
-		});
-		
-		toolBar.addSeparator();
-		
-		JButton writeFrameBuffer = new JButton("writeFramebuffer");
-		toolBar.add(writeFrameBuffer);
-		
-		writeFrameBuffer.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				model.writeFramebuffer();
-			}
-		});
-		
-		
-		JButton drawTests = new JButton("drawTests");
-		drawTests.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				model.drawLine(new Random().nextInt(128),new Random().nextInt(64), new Random().nextInt(128),new Random().nextInt(64));
-			}
-		});
-		toolBar.add(drawTests);
 	}
 	
 	
